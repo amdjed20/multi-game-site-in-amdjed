@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موقع الألعاب الجماعية</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    h2 {
+      margin-top: 2rem;
+    }
+    .room {
+      display: none;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 2rem;
+    }
+    .players {
+      text-align: right;
+      margin-top: 1rem;
+    }
+    .players ul {
+      list-style: none;
+      padding: 0;
+    }
+    .players li {
+      padding: 0.4rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="home">
+    <h1>🎮 موقع الألعاب الجماعية</h1>
+    <input id="playerName" type="text" placeholder="اكتب اسمك">
+    <button onclick="createRoom()">🔵 إنشاء غرفة جديدة</button>
+
+    <h2>أو دخول إلى غرفة</h2>
+    <input id="roomCode" type="text" placeholder="ادخل كود الغرفة">
+    <button onclick="joinRoom()">🟢 انضمام</button>
+  </div>
+
+  <div class="room" id="roomSection">
+    <h2>رمز الغرفة: <span id="showRoomCode"></span></h2>
+    <div class="players">
+      <h3>اللاعبون في الغرفة:</h3>
+      <ul id="playerList"></ul>
+    </div>
+    <h3>اختر لعبة:</h3>
+    <button onclick="selectGame('XO')">XO</button>
+    <button onclick="selectGame('مافيا')">مافيا</button>
+    <button onclick="selectGame('من برا سالفا')">من برا سالفا</button>
+    <button onclick="selectGame('حجرة ورقة مقص')">حجرة ورقة مقص</button>
+  </div>
+
+  <script>
+    let roomPlayers = [];
+    let playerName = '';
+    let roomCode = '';
+
+    function generateRoomCode() {
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = '';
+      for (let i = 0; i < 4; i++) {
+        code += letters[Math.floor(Math.random() * letters.length)];
+      }
+      return code;
+    }
+
+    function createRoom() {
+      playerName = document.getElementById('playerName').value.trim();
+      if (!playerName) return alert('الرجاء إدخال اسمك');
+
+      roomCode = generateRoomCode();
+      roomPlayers = [playerName];
+      showRoom();
+    }
+
+    function joinRoom() {
+      playerName = document.getElementById('playerName').value.trim();
+      const inputCode = document.getElementById('roomCode').value.trim().toUpperCase();
+      if (!playerName || !inputCode) return alert('يرجى إدخال الاسم وكود الغرفة');
+
+      roomCode = inputCode;
+      roomPlayers.push(playerName);
+      showRoom();
+    }
+
+    function showRoom() {
+      document.getElementById('home').style.display = 'none';
+      document.getElementById('roomSection').style.display = 'block';
+      document.getElementById('showRoomCode').innerText = roomCode;
+      updatePlayerList();
+    }
+
+    function updatePlayerList() {
+      const list = document.getElementById('playerList');
+      list.innerHTML = '';
+      roomPlayers.forEach(p => {
+        const li = document.createElement('li');
+        li.textContent = p;
+        list.appendChild(li);
+      });
+    }
+
+    function selectGame(game) {
+      alert(`تم اختيار اللعبة: ${game}`);
+      // لاحقًا: الانتقال لصفحة اللعبة المحددة
+    }
+  </script>
+</body>
+</html>
